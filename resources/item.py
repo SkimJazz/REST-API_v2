@@ -1,11 +1,14 @@
-import uuid
+# Library and package imports
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
-from schemas import ItemSchema, ItemUpdateSchema
+from flask_jwt_extended import jwt_required
 from sqlalchemy.exc import SQLAlchemyError
 
+# Local imports
 from db import db
 from models import ItemModel
+from schemas import ItemSchema, ItemUpdateSchema
+
 
 blp = Blueprint("Items", __name__, description="Operations on items")
 
@@ -24,14 +27,15 @@ class Item(MethodView):
         item = ItemModel.query.get_or_404(item_id)
         return item
 
+    @jwt_required(fresh=True)   # fresh access token needed
     def delete(self, item_id):
         """Delete an item by id:"""
         item = ItemModel.query.get_or_404(item_id)
-
         db.session.delete(item)
         db.session.commit()
         return {"message": "Item deleted."}
 
+    @jwt_required(fresh=True)   # fresh access token needed
     @blp.arguments(ItemUpdateSchema)
     @blp.response(200, ItemSchema)
     def put(self, item_data, item_id):
@@ -41,7 +45,6 @@ class Item(MethodView):
         matter how many times it is repeated. In other words, multiple identical
         requests will have the same effect as a single request.
         """
-
         item = ItemModel.query.get(item_id)
 
         if item:
@@ -62,6 +65,7 @@ class ItemList(MethodView):
     def get(self):
         return ItemModel.query.all()
 
+    # @jwt_required()
     @blp.arguments(ItemSchema)
     @blp.response(201, ItemSchema)
     def post(self, item_data):
@@ -72,7 +76,6 @@ class ItemList(MethodView):
         'store_id' are the primary key for the item table. This is a
         limitation of the current design.
         """
-
         item = ItemModel(**item_data)
 
         try:
