@@ -7,10 +7,12 @@ class ItemModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=False, nullable=False)
     price = db.Column(db.Float(precision=2), unique=False, nullable=False)
-
-    # One-to-many relationship
+    description = db.Column(db.String(255), nullable=True)  # new column for item description
     store_id = db.Column(
         db.Integer, db.ForeignKey("stores.id"), unique=False, nullable=False
     )
+
+    # One-to-many relationship: items and stores:
     store = db.relationship("StoreModel", back_populates="items")
+    # Many-to-many relationship: items and tags:
     tags = db.relationship("TagModel", back_populates="items", secondary="items_tags")

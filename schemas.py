@@ -9,14 +9,15 @@ class PlainItemSchema(Schema):
     with in a store, but we don't want to include any information about the
     store itself.
     """
-    id = fields.Int(dump_only=True)
+    id = fields.Int(dump_only=True)  # dump_only=True -> don't include id when sending data to client
     name = fields.Str(required=True)
     price = fields.Float(required=True)
+    description = fields.Str()  # new field for item description
 
 
 class PlainStoreSchema(Schema):
     id = fields.Int(dump_only=True)
-    name = fields.Str()
+    name = fields.Str(required=True)
 
 
 class PlainTagSchema(Schema):
@@ -41,14 +42,16 @@ class ItemSchema(PlainItemSchema):
     store_id = fields.Int(required=True, load_only=True)
     store = fields.Nested(PlainStoreSchema(), dump_only=True)
     tags = fields.List(fields.Nested(PlainTagSchema()), dump_only=True)
+    description = fields.Str()  # new field for item description
 
 
 class ItemUpdateSchema(Schema):
-    """Schema for item update:"""
-    # name = fields.Str()
-    # price = fields.Float()
-    name = fields.Str(required=True)
-    price = fields.Float(required=True)
+    name = fields.Str()
+    price = fields.Float()
+    # name = fields.Str(required=True)
+    # price = fields.Float(required=True)
+    description = fields.Str()  # new field for item description
+    store_id = fields.Int()
 
 
 class StoreSchema(PlainStoreSchema):
