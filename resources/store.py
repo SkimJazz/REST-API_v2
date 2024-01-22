@@ -86,6 +86,7 @@ class StoreList(MethodView):
         :raises IntegrityError: If a store with the same name already exists.
         :raises SQLAlchemyError: If an error occurred while creating the store.
         """
+
         store = StoreModel(**store_data)
 
         try:

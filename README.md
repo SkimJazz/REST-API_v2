@@ -1,5 +1,7 @@
 # REST API v2
 
+Used this file for documenting the Endpoints
+
 ## Overview
 REST-API version 2(v2) project...
 
