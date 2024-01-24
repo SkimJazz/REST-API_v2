@@ -11,6 +11,7 @@ from flask_smorest import Api
 from flask_migrate import Migrate   # Flask-Migrate includes Alembic
 from flask_jwt_extended import JWTManager
 from flask import Flask, jsonify
+from dotenv import load_dotenv
 
 from db import db
 from blocklist import BLOCKLIST
@@ -31,6 +32,7 @@ def create_app(db_url=None):
     Can be used to test the app with a different database URL.
     """
     app = Flask(__name__)  # http://127.0.0.1:5000  (default port)
+    load_dotenv()  # load environment variables from .env file
 
     app.config["PROPAGATE_EXCEPTIONS"] = True
     app.config["API_TITLE"] = "REST API v2"
